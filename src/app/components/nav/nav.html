@@ -1,0 +1,24 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a routerLink="/" class="logo">
+      <span class="logo-icon">♿</span>
+      <span class="logo-text">HandiMatched</span>
+    </a>
+    <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <ul class="nav-links" [class.open]="menuOpen">
+    <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuOpen=false">Home</a></li>
+    @if (auth.isLoggedIn()) {
+      <li><a routerLink="/browse" routerLinkActive="active" (click)="menuOpen=false">Browse</a></li>
+      <li><a routerLink="/events" routerLinkActive="active" (click)="menuOpen=false">Events</a></li>
+      <li><a routerLink="/profile" routerLinkActive="active" (click)="menuOpen=false">My Profile</a></li>
+      <li><a href="#" class="btn-secondary" (click)="logout(); menuOpen=false">Logout</a></li>
+    } @else {
+      <li><a routerLink="/login" routerLinkActive="active" (click)="menuOpen=false">Login</a></li>
+      <li><a routerLink="/register" class="btn-primary" (click)="menuOpen=false">Join Now</a></li>
+    }
+  </ul>
+</nav>

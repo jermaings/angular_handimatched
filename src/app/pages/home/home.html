@@ -1,0 +1,55 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Welcome to <span class="brand">HandiMatched</span></h1>
+    <p class="tagline">An inclusive social platform where connections are built on empathy, understanding, and shared experiences.</p>
+    @if (!auth.isLoggedIn()) {
+      <div class="hero-actions">
+        <a routerLink="/register" class="btn-cta">Get Started — It's Free</a>
+        <a routerLink="/login" class="btn-outline">Sign In</a>
+      </div>
+    } @else {
+      <div class="hero-actions">
+        <a routerLink="/browse" class="btn-cta">Browse Members</a>
+        <a routerLink="/events" class="btn-outline">View Events</a>
+      </div>
+    }
+  </div>
+  <div class="hero-image">
+    <div class="hero-illustration">♿💙🤝</div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+  @for (stat of stats; track stat.label) {
+    <div class="stat-card">
+      <div class="stat-value">{{ stat.value }}</div>
+      <div class="stat-label">{{ stat.label }}</div>
+    </div>
+  }
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <h2>Why HandiMatched?</h2>
+  <p class="section-subtitle">We believe everyone deserves meaningful social connections.</p>
+  <div class="features-grid">
+    @for (feature of features; track feature.title) {
+      <div class="feature-card">
+        <div class="feature-icon">{{ feature.icon }}</div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- CTA Section -->
+@if (!auth.isLoggedIn()) {
+  <section class="cta-section">
+    <h2>Ready to Make Connections?</h2>
+    <p>Join thousands of members who have found friendships, support, and joy through HandiMatched.</p>
+    <a routerLink="/register" class="btn-cta">Create Your Free Profile</a>
+  </section>
+}

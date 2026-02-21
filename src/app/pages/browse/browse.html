@@ -1,0 +1,69 @@
+<div class="browse-container">
+  <div class="browse-header">
+    <h1>Browse Members</h1>
+    <p>Discover people who share your interests and experiences.</p>
+  </div>
+
+  <div class="filters">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="🔍 Search by name, location, or bio..."
+      [value]="searchQuery()"
+      (input)="searchQuery.set($any($event.target).value)"
+      aria-label="Search members"
+    />
+    <select
+      class="interest-filter"
+      [value]="selectedInterest()"
+      (change)="selectedInterest.set($any($event.target).value)"
+      aria-label="Filter by interest"
+    >
+      <option value="">All Interests</option>
+      @for (interest of allInterests(); track interest) {
+        <option [value]="interest">{{ interest }}</option>
+      }
+    </select>
+  </div>
+
+  @if (filteredUsers().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <p>No members found matching your search.</p>
+      <button (click)="searchQuery.set(''); selectedInterest.set('')" class="btn-reset">Clear Filters</button>
+    </div>
+  }
+
+  <div class="members-grid">
+    @for (user of filteredUsers(); track user.id) {
+      <div class="member-card">
+        <div class="card-header">
+          <img [src]="user.avatar" [alt]="user.name" class="member-avatar" />
+          <button
+            class="like-btn"
+            [class.liked]="isLiked(user.id)"
+            (click)="toggleLike(user.id)"
+            [attr.aria-label]="isLiked(user.id) ? 'Unlike ' + user.name : 'Like ' + user.name"
+          >
+            {{ isLiked(user.id) ? '❤️' : '🤍' }}
+          </button>
+        </div>
+        <div class="card-body">
+          <h3>{{ user.name }}, {{ user.age }}</h3>
+          <p class="member-location">📍 {{ user.location }}</p>
+          <p class="member-bio">{{ user.bio }}</p>
+          <div class="member-tags">
+            @for (interest of user.interests.slice(0, 3); track interest) {
+              <span class="tag">{{ interest }}</span>
+            }
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn-connect" (click)="toggleLike(user.id)">
+            {{ isLiked(user.id) ? '✓ Connected' : 'Connect' }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

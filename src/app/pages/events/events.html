@@ -1,0 +1,91 @@
+<div class="events-container">
+  <div class="events-header">
+    <h1>Social Events</h1>
+    <p>Find and join accessible social events near you or online.</p>
+  </div>
+
+  <div class="filters">
+    <select
+      class="filter-select"
+      [value]="categoryFilter()"
+      (change)="categoryFilter.set($any($event.target).value)"
+      aria-label="Filter by category"
+    >
+      <option value="">All Categories</option>
+      @for (cat of categories(); track cat) {
+        <option [value]="cat">{{ cat }}</option>
+      }
+    </select>
+
+    <select
+      class="filter-select"
+      [value]="modeFilter()"
+      (change)="modeFilter.set($any($event.target).value)"
+      aria-label="Filter by mode"
+    >
+      <option value="">All Events</option>
+      <option value="online">Online Only</option>
+      <option value="in-person">In-Person Only</option>
+    </select>
+  </div>
+
+  @if (filteredEvents().length === 0) {
+    <div class="empty-state">
+      <p>No events found for the selected filters.</p>
+      <button (click)="categoryFilter.set(''); modeFilter.set('')" class="btn-reset">Clear Filters</button>
+    </div>
+  }
+
+  <div class="events-grid">
+    @for (event of filteredEvents(); track event.id) {
+      <div class="event-card" [class.full]="isFull(event) && !isRsvped(event.id)">
+        <div class="event-card-header">
+          <span class="event-icon">{{ event.icon }}</span>
+          <div class="event-badges">
+            <span class="badge" [class.online-badge]="event.online" [class.inperson-badge]="!event.online">
+              {{ event.online ? '🌐 Online' : '📍 In Person' }}
+            </span>
+            @if (isFull(event) && !isRsvped(event.id)) {
+              <span class="badge full-badge">Full</span>
+            }
+          </div>
+        </div>
+
+        <div class="event-card-body">
+          <span class="category">{{ event.category }}</span>
+          <h3>{{ event.title }}</h3>
+          <p class="event-desc">{{ event.description }}</p>
+
+          <div class="event-meta">
+            <span>📅 {{ formatDate(event.date) }}</span>
+            <span>🕐 {{ event.time }}</span>
+            <span>📍 {{ event.location }}</span>
+          </div>
+
+          <div class="attendees-bar">
+            <div class="bar-fill" [style.width.%]="(event.attendees / event.maxAttendees) * 100"></div>
+          </div>
+          <p class="attendees-text">{{ event.attendees }} / {{ event.maxAttendees }} attending</p>
+        </div>
+
+        <div class="event-card-footer">
+          <button
+            class="btn-rsvp"
+            [class.rsvped]="isRsvped(event.id)"
+            [class.disabled]="isFull(event) && !isRsvped(event.id)"
+            (click)="toggleRsvp(event.id, isFull(event))"
+            [disabled]="isFull(event) && !isRsvped(event.id)"
+          >
+            @if (isRsvped(event.id)) {
+              ✓ Cancel RSVP
+            } @else if (isFull(event)) {
+              Event Full
+            } @else {
+              RSVP Now
+            }
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
