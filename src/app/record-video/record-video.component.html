@@ -1,0 +1,50 @@
+<mat-card>
+    <mat-card-content>
+        <button *ngIf="state === 'NONE' && recordType" mat-raised-button (click)="setRecordingType()">Record Video</button>
+        <!-- <button *ngIf="state === 'NONE' && !recordType" mat-raised-button (click)="setRecordingType()">Record Screen</button> -->
+        <button *ngIf="state === 'NONE' && !recordType" mat-raised-button (click)="startRecording()">Start Recording Video</button>
+        <button *ngIf="state === 'NONE' && recordType" mat-raised-button (click)="startCanvasRecording()">Start Recording Screen</button>
+        <button *ngIf="state === 'RECORDING'" mat-raised-button (click)="stopRecording()">Stop Recording</button>
+        <button *ngIf="state === 'RECORDED' && !saveTitleToVideo" mat-raised-button (click)="downloadRecording()">Download video</button>
+        <button *ngIf="state === 'RECORDED' && !saveTitleToVideo" mat-raised-button (click)="openTitleElement()">Add Video To Profile</button>
+        <button *ngIf="state === 'RECORDED' && !saveTitleToVideo" mat-raised-button (click)="clearRecording()">Clear Recording</button>
+        <ng-container class="titleContainer" *ngIf="saveTitleToVideo">
+            <mat-label>Add Title For Video</mat-label>
+            <form  [formGroup]="titleForm">
+                <mat-form-field>
+                    <input          
+                        matInput
+                        type="text"
+                        formControlName="title"
+                        placeholder="Video Title Here"
+                    >
+                </mat-form-field>
+            <div>
+                <button mat-raised-button (click)="saveRecording($event)">Save Now</button>
+                <button mat-raised-button (click)="openTitleElement()">Cancel</button>
+            </div>
+            </form>
+        </ng-container>
+        <video 
+         #videoElement
+         class="video-container mat-elevation-z8"
+         controls
+         autoplay
+         playsInline
+         >
+            <source [src]="videoBlobUrl" />
+        </video>
+    </mat-card-content>
+</mat-card>
+
+<mat-card>
+    <div style="display: flex; flex-flow: column; align-items: center; margin-bottom: 0em !important">
+        <button mat-stroked-button type="button" (click)="imagePicker.click()">Select Profile Image</button>
+        <input class="image" type="file" #imagePicker (change)="onImagePicked($event)">
+      </div>
+      <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && profileForm.get('imagePath')?.valid">
+        <img [src]="imagePreview" [alt]="profileForm.value.username">
+        <!-- <img *ngIf="!imagePreview" src="{{image}}" [alt]="profileForm.value.username"> -->
+        <!-- <video *ngIf="format==='video' && url" height="200" controls [src]="imagePreview" [alt]="profileForm.value.username"></video> -->
+      </div> 
+</mat-card>
